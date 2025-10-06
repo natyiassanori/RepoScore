@@ -89,36 +89,6 @@ public class GitHubRepoItemFactory {
         );
     }
 
-    public static GitHubRepoItem createSpringBoot() {
-        return new GitHubRepoItem(
-                1L,
-                "spring-boot",
-                "spring-projects/spring-boot",
-                "https://github.com/spring-projects/spring-boot",
-                "Spring Boot makes it easy to create stand-alone, production-grade Spring based Applications",
-                DEFAULT_DATE,
-                DEFAULT_DATE,
-                "Java",
-                50000,
-                30000
-        );
-    }
-
-    public static GitHubRepoItem createReact() {
-        return new GitHubRepoItem(
-                2L,
-                "react",
-                "facebook/react",
-                "https://github.com/facebook/react",
-                "A declarative, efficient, and flexible JavaScript library for building user interfaces",
-                DEFAULT_DATE,
-                DEFAULT_DATE,
-                "JavaScript",
-                200000,
-                40000
-        );
-    }
-
     public static GitHubRepoItem createTensorFlow() {
         return new GitHubRepoItem(
                 3L,
