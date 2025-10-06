@@ -67,14 +67,16 @@ This is a **Spring Boot** project using **Java 21**. You can run it using your p
 
 ### 🔗 Endpoint
 
-**GET** `/scoring?language=${language}&earliestCreationDate=${creationDate}`
+**GET** `/scoring?language=${language}&createdDate=${creationDate}`
+
+e.g.: http://localhost:8080/scoring?language=java&createdDate=2023-01-01
 
 This endpoint returns a list of repositories with their calculated scores.
 
 #### Optional Query Parameters:
 
 - `language` – Filter by programming language
-- `earliestCreatedDate` – Filter by creation date after this value (ISO format, e.g. `2023-01-01`)
+- `createdDate` – Filter by creation date from this value (ISO format, e.g. `2023-01-01`)
 
 If no parameters are provided, it fetches all available repositories (up to GitHub’s API limit).
 
