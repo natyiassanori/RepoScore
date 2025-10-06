@@ -5,7 +5,6 @@ import org.reposcore.dto.ScoredRepository;
 import org.reposcore.dto.ScoringRepositoriesResponse;
 import org.reposcore.feign.client.GitHubApiClient;
 import org.reposcore.feign.client.dto.GitHubRepoItem;
-import org.reposcore.mapper.ScoringRepositoriesResponseMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -19,14 +18,16 @@ public class ScoringRepositoriesService {
 
     private final GitHubPaginationService gitHubPaginationService;
 
+    private final ScoreCalculatorService scoreCalculatorService;
+
     public ScoringRepositoriesResponse getRepositoriesWithScore(Date createdDate, String language) {
         String query = buildQueryParameter(createdDate, language);
 
         List<GitHubRepoItem> allRepositories = gitHubPaginationService.fetchAllRepositoriesFromGitHub(gitHubApiClient, query);
 
-        List<ScoredRepository> repositores = allRepositories.stream().map(item -> ScoringRepositoriesResponseMapper.mapToScoredRepository(item, 0)).toList();
+        List<ScoredRepository> repositoriesResponse = scoreCalculatorService.assignScoresForRepositories(allRepositories);
 
-        return new ScoringRepositoriesResponse(repositores);
+        return new ScoringRepositoriesResponse(repositoriesResponse);
     }
 
     private String buildQueryParameter(Date createdDate, String language) {
