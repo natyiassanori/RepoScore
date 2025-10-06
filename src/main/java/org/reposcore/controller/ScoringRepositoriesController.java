@@ -1,6 +1,7 @@
 package org.reposcore.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.reposcore.dto.ScoringRepositoriesResponse;
 import org.reposcore.service.ScoringRepositoriesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +19,8 @@ public class ScoringRepositoriesController {
     private final ScoringRepositoriesService scoringRepositoriesService;
 
     @GetMapping
-    public ResponseEntity<String> getScoredRepositories(@RequestParam(value = "earliestCreatedDate", required = false) Date createdDate,
-                                                        @RequestParam(value = "language", required = false) String language) {
+    public ScoringRepositoriesResponse getScoredRepositories(@RequestParam(value = "earliestCreatedDate", required = false) Date createdDate,
+                                                             @RequestParam(value = "language", required = false) String language) {
         return scoringRepositoriesService.getRepositoriesWithScore(createdDate, language);
     }
 }

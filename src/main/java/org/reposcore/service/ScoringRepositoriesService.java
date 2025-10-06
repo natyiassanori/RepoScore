@@ -1,12 +1,16 @@
 package org.reposcore.service;
 
 import lombok.RequiredArgsConstructor;
+import org.reposcore.dto.ScoredRepository;
+import org.reposcore.dto.ScoringRepositoriesResponse;
 import org.reposcore.feign.client.GitHubApiClient;
 import org.reposcore.feign.client.dto.GitHubApiClientResponse;
+import org.reposcore.mapper.ScoringRepositoriesResponseMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -14,12 +18,14 @@ public class ScoringRepositoriesService {
 
     private final GitHubApiClient gitHubApiClient;
 
-    public ResponseEntity<String> getRepositoriesWithScore(Date createdDate, String language) {
+    public ScoringRepositoriesResponse getRepositoriesWithScore(Date createdDate, String language) {
         String query = buildQueryParameter(createdDate, language);
         
         ResponseEntity<GitHubApiClientResponse> allRepositories = gitHubApiClient.searchRepositories(query, 100, 1);
 
-        return ResponseEntity.ok("ok");
+        List<ScoredRepository> repositores = allRepositories.getBody().items().stream().map(item -> ScoringRepositoriesResponseMapper.mapToScoredRepository(item, 0)).toList();
+
+        return new ScoringRepositoriesResponse(repositores);
     }
 
     private String buildQueryParameter(Date createdDate, String language) {
