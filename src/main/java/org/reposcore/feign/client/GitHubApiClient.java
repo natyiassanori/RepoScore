@@ -1,6 +1,6 @@
-package org.scoringapi.feign.client;
+package org.reposcore.feign.client;
 
-import org.scoringapi.feign.client.dto.GitHubApiClientResponse;
+import org.reposcore.feign.client.dto.GitHubApiClientResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

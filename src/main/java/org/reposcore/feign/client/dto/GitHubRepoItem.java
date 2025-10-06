@@ -1,4 +1,4 @@
-package org.scoringapi.feign.client.dto;
+package org.reposcore.feign.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
