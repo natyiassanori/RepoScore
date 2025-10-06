@@ -65,7 +65,7 @@ class ScoringRepositoriesServiceTest {
         ScoringRepositoriesResponse result = scoringRepositoriesService.getRepositoriesWithScore(testDate, language);
 
         assertEquals(1, result.getRepositories().size());
-        assertEquals(testScoredRepo, result.getRepositories().get(0));
+        assertEquals(testScoredRepo, result.getRepositories().getFirst());
 
         verify(gitHubPaginationService).fetchAllRepositoriesFromGitHub(
                 eq(gitHubApiClient), 

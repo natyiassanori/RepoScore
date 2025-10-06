@@ -49,7 +49,7 @@ class ScoreCalculatorServiceTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         
-        ScoredRepository scoredRepo = result.get(0);
+        ScoredRepository scoredRepo = result.getFirst();
         assertEquals("test-repo", scoredRepo.getName());
         assertEquals(1000, scoredRepo.getStars());
         assertEquals(500, scoredRepo.getForks());
@@ -134,7 +134,7 @@ class ScoreCalculatorServiceTest {
 
         assertEquals(1, result.size());
 
-        ScoredRepository scoredRepo = result.get(0);
+        ScoredRepository scoredRepo = result.getFirst();
         assertEquals(repoWithHighMetrics.name(), scoredRepo.getName());
         assertEquals(repoWithHighMetrics.fullName(), scoredRepo.getFullName());
         assertEquals(repoWithHighMetrics.language(), scoredRepo.getLanguage());

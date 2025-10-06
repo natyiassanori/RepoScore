@@ -134,21 +134,6 @@ public class GitHubRepoItemFactory {
         );
     }
 
-    public static java.util.List<GitHubRepoItem> createPopularRepositories() {
-        return java.util.List.of(
-                createSpringBoot(),
-                createReact(),
-                createTensorFlow()
-        );
-    }
-
-    public static java.util.List<GitHubRepoItem> createJavaRepositories() {
-        return java.util.List.of(
-                createSpringBoot(),
-                createWithLanguage("Java")
-        );
-    }
-
     public static java.util.List<GitHubRepoItem> createPythonRepositories() {
         return java.util.List.of(
                 createTensorFlow(),
