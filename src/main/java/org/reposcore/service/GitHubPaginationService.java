@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.reposcore.feign.client.GitHubApiClient;
 import org.reposcore.feign.client.dto.GitHubApiClientResponse;
 import org.reposcore.feign.client.dto.GitHubRepoItem;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Service
 public class GitHubPaginationService {
 
-
+    @Cacheable("gitHubRepositories")
     public List<GitHubRepoItem> fetchAllRepositoriesFromGitHub(GitHubApiClient gitHubApiClient, String query) {
         List<GitHubRepoItem> allRepositories = new ArrayList<>();
         
