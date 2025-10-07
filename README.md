@@ -87,6 +87,7 @@ If no parameters are provided, it fetches all available repositories (up to GitH
 
 ##  Considerations
 
+- I used Java 21 because is the version I most used after Java 11 (I thought Java 11 was a bit too old to use here :P), and the one I have more familiarity.
 - As GitHub Search API returns many repository properties, I choose to keep only the ones that were more interesting for the problem - and possible to the final user.
 - GitHub’s API returns a maximum of 1000 repositories.
 - The GitHub’s API is rate-limited to 30 requests per minute, exceeding this limit may result in errors (can happen if you call scoring endpoint many times consecutively).
