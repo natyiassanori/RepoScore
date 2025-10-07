@@ -2,7 +2,6 @@ package org.reposcore.service;
 
 import lombok.RequiredArgsConstructor;
 import org.reposcore.dto.ScoredRepository;
-import org.reposcore.dto.ScoringRepositoriesResponse;
 import org.reposcore.feign.client.GitHubApiClient;
 import org.reposcore.feign.client.dto.GitHubRepoItem;
 import org.springframework.stereotype.Service;
@@ -20,14 +19,12 @@ public class ScoringRepositoriesService {
 
     private final ScoreCalculatorService scoreCalculatorService;
 
-    public ScoringRepositoriesResponse getRepositoriesWithScore(Date createdDate, String language) {
+    public List<ScoredRepository> getRepositoriesWithScore(Date createdDate, String language) {
         String query = buildQueryParameter(createdDate, language);
 
         List<GitHubRepoItem> allRepositories = gitHubPaginationService.fetchAllRepositoriesFromGitHub(gitHubApiClient, query);
 
-        List<ScoredRepository> repositoriesResponse = scoreCalculatorService.assignScoresForRepositories(allRepositories);
-
-        return new ScoringRepositoriesResponse(repositoriesResponse);
+        return scoreCalculatorService.assignScoresForRepositories(allRepositories);
     }
 
     private String buildQueryParameter(Date createdDate, String language) {

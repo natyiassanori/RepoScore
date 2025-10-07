@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.reposcore.dto.ScoredRepository;
-import org.reposcore.dto.ScoringRepositoriesResponse;
 import org.reposcore.feign.client.GitHubApiClient;
 import org.reposcore.feign.client.dto.GitHubRepoItem;
 import org.reposcore.service.GitHubPaginationService;
@@ -20,7 +19,6 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -62,10 +60,10 @@ class ScoringRepositoriesServiceTest {
         when(scoreCalculatorService.assignScoresForRepositories(mockRepos))
                 .thenReturn(mockScoredRepos);
 
-        ScoringRepositoriesResponse result = scoringRepositoriesService.getRepositoriesWithScore(testDate, language);
+        List<ScoredRepository> result = scoringRepositoriesService.getRepositoriesWithScore(testDate, language);
 
-        assertEquals(1, result.getRepositories().size());
-        assertEquals(testScoredRepo, result.getRepositories().getFirst());
+        assertEquals(1, result.size());
+        assertEquals(testScoredRepo, result.getFirst());
 
         verify(gitHubPaginationService).fetchAllRepositoriesFromGitHub(
                 eq(gitHubApiClient), 
@@ -85,9 +83,8 @@ class ScoringRepositoriesServiceTest {
         when(scoreCalculatorService.assignScoresForRepositories(mockRepos))
                 .thenReturn(mockScoredRepos);
 
-        ScoringRepositoriesResponse result = scoringRepositoriesService.getRepositoriesWithScore(null, language);
+        scoringRepositoriesService.getRepositoriesWithScore(null, language);
 
-        assertNotNull(result);
         verify(gitHubPaginationService).fetchAllRepositoriesFromGitHub(
                 eq(gitHubApiClient),
                 argThat(query -> query.startsWith("language:PYTHON") && !query.contains("created:>"))
@@ -104,9 +101,8 @@ class ScoringRepositoriesServiceTest {
         when(scoreCalculatorService.assignScoresForRepositories(mockRepos))
                 .thenReturn(mockScoredRepos);
 
-        ScoringRepositoriesResponse result = scoringRepositoriesService.getRepositoriesWithScore(testDate, null);
+        scoringRepositoriesService.getRepositoriesWithScore(testDate, null);
 
-        assertNotNull(result);
         verify(gitHubPaginationService).fetchAllRepositoriesFromGitHub(
                 eq(gitHubApiClient), 
                 argThat(query -> query.startsWith("created:>") && !query.contains("language:"))
@@ -123,9 +119,8 @@ class ScoringRepositoriesServiceTest {
         when(scoreCalculatorService.assignScoresForRepositories(mockRepos))
                 .thenReturn(mockScoredRepos);
 
-        ScoringRepositoriesResponse result = scoringRepositoriesService.getRepositoriesWithScore(null, null);
+        scoringRepositoriesService.getRepositoriesWithScore(null, null);
 
-        assertNotNull(result);
         verify(gitHubPaginationService).fetchAllRepositoriesFromGitHub(
                 eq(gitHubApiClient),
                 argThat(query -> query.startsWith("Q") && !query.contains("language:") && !query.contains("created:>"))
