@@ -84,6 +84,7 @@ If no parameters are provided, it fetches all available repositories (up to GitH
 
 ##  Considerations
 
+- As GitHub Search API returns many repository properties, I choose to keep only the ones that were more interesting for the problem - and possible to the final user.
 - GitHub’s API returns a maximum of 1000 repositories.
 - The GitHub’s API is rate-limited to 30 requests per minute, exceeding this limit may result in errors (can happen if you call scoring endpoint many times consecutively).
 - Fetching all pages from GitHub may take ~20 seconds.

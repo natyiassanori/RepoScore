@@ -15,8 +15,6 @@ import java.util.List;
 @Slf4j
 public class ScoringRepositoriesService {
 
-    private final GitHubApiClient gitHubApiClient;
-
     private final GitHubPaginationService gitHubPaginationService;
 
     private final ScoreCalculatorService scoreCalculatorService;
@@ -26,7 +24,7 @@ public class ScoringRepositoriesService {
 
         log.info("Calculating score for repositories that matches the query: {}", query);
 
-        List<GitHubRepoItem> allRepositories = gitHubPaginationService.fetchAllRepositoriesFromGitHub(gitHubApiClient, query);
+        List<GitHubRepoItem> allRepositories = gitHubPaginationService.fetchAllRepositoriesFromGitHub(query);
 
         List<ScoredRepository> scoredRepositories = scoreCalculatorService.assignScoresForRepositories(allRepositories);
 

@@ -1,5 +1,6 @@
 package org.reposcore.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.reposcore.exception.GitHubApiException;
 import org.reposcore.feign.client.GitHubApiClient;
@@ -14,12 +15,15 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class GitHubPaginationService {
 
     private static final String ACCEPT_HEADER = "application/vnd.github+json";
 
+    private final GitHubApiClient gitHubApiClient;
+
     @Cacheable("gitHubRepositories")
-    public List<GitHubRepoItem> fetchAllRepositoriesFromGitHub(GitHubApiClient gitHubApiClient, String query) {
+    public List<GitHubRepoItem> fetchAllRepositoriesFromGitHub(String query) {
         List<GitHubRepoItem> allRepositories = new ArrayList<>();
         
         int currentPage = 1;

@@ -29,6 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ScoringRepositoriesControllerTest {
 
+    private static final String ACCEPT_HEADER = "application/vnd.github+json";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -43,25 +45,24 @@ class ScoringRepositoriesControllerTest {
     @Test
     void whenGettingScoredRepositoriesWithoutQueryParameters_ThenShouldReturnAllRepositories() throws Exception {
         List<GitHubRepoItem> mockRepositories = createPythonRepositories();
-        when(gitHubApiClient.searchRepositories(anyString(), anyInt(), anyInt()))
+        when(gitHubApiClient.searchRepositories(ACCEPT_HEADER, "Q", 100, 1))
                 .thenReturn(createGitHubApiResponseWithRepositories(mockRepositories));
 
         mockMvc.perform(get("/scoring")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.repositories").isArray())
-                .andExpect(jsonPath("$.repositories").isNotEmpty())
-                .andExpect(jsonPath("$.repositories.length()").value(2));
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(2));
 
-        verify(gitHubApiClient).searchRepositories("Q", 100, 1);
+        verify(gitHubApiClient).searchRepositories(ACCEPT_HEADER, "Q", 100, 1);
     }
     @Test
     void whenGettingScoredRepositoriesWithQueryParameters_ThenShouldReturnFilteredRepositories() throws Exception {
         String language = "python";
         List<GitHubRepoItem> mockRepositories = createPythonRepositories();
         
-        when(gitHubApiClient.searchRepositories(anyString(), anyInt(), anyInt()))
+        when(gitHubApiClient.searchRepositories(ACCEPT_HEADER, "language:PYTHON", 100, 1))
                 .thenReturn(createGitHubApiResponseWithRepositories(mockRepositories));
 
         mockMvc.perform(get("/scoring")
@@ -69,11 +70,10 @@ class ScoringRepositoriesControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.repositories").isArray())
-                .andExpect(jsonPath("$.repositories").isNotEmpty())
-                .andExpect(jsonPath("$.repositories.length()").value(2));
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(2));
 
-        verify(gitHubApiClient).searchRepositories("language:PYTHON", 100, 1);
+        verify(gitHubApiClient).searchRepositories(ACCEPT_HEADER,"language:PYTHON", 100, 1);
     }
 
     private List<GitHubRepoItem> createPythonRepositories() {

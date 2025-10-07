@@ -21,7 +21,7 @@ public class ScoringRepositoriesController {
 
     @GetMapping
     public List<ScoredRepository> getScoredRepositories(@RequestParam(name = "earliestCreatedDate", required = false)
-                                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date earliestCreatedDate,
+                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date earliestCreatedDate,
                                                         @RequestParam(name = "language", required = false) String language) {
         return scoringRepositoriesService.getRepositoriesWithScore(earliestCreatedDate, language);
     }

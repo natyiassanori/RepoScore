@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.reposcore.exception.GitHubApiException;
 import org.reposcore.feign.client.GitHubApiClient;
 import org.reposcore.feign.client.dto.GitHubApiClientResponse;
 import org.reposcore.feign.client.dto.GitHubRepoItem;
@@ -27,6 +28,8 @@ class GitHubPaginationServiceTest {
 
     @InjectMocks
     private GitHubPaginationService gitHubPaginationService;
+
+    private static final String ACCEPT_HEADER = "application/vnd.github+json";
 
     private GitHubRepoItem testRepo1;
     private GitHubRepoItem testRepo2;
@@ -49,16 +52,15 @@ class GitHubPaginationServiceTest {
                 .header("Link", "")
                 .body(response);
 
-        when(gitHubApiClient.searchRepositories("test query", 100, 1))
+        when(gitHubApiClient.searchRepositories(ACCEPT_HEADER, "test query", 100, 1))
                 .thenReturn(responseEntity);
 
-        List<GitHubRepoItem> result = gitHubPaginationService.fetchAllRepositoriesFromGitHub(
-                gitHubApiClient, "test query");
+        List<GitHubRepoItem> result = gitHubPaginationService.fetchAllRepositoriesFromGitHub("test query");
 
         assertEquals(2, result.size());
         assertTrue(result.contains(testRepo1));
         assertTrue(result.contains(testRepo2));
-        verify(gitHubApiClient).searchRepositories("test query", 100, 1);
+        verify(gitHubApiClient).searchRepositories(ACCEPT_HEADER, "test query", 100, 1);
     }
 
     @Test
@@ -87,24 +89,23 @@ class GitHubPaginationServiceTest {
                 .header("Link", "")
                 .body(thirdPageResponse);
 
-        when(gitHubApiClient.searchRepositories("test query", 100, 1))
+        when(gitHubApiClient.searchRepositories(ACCEPT_HEADER, "test query", 100, 1))
                 .thenReturn(firstPageEntity);
-        when(gitHubApiClient.searchRepositories("test query", 100, 2))
+        when(gitHubApiClient.searchRepositories(ACCEPT_HEADER, "test query", 100, 2))
                 .thenReturn(secondPageEntity);
-        when(gitHubApiClient.searchRepositories("test query", 100, 3))
+        when(gitHubApiClient.searchRepositories(ACCEPT_HEADER, "test query", 100, 3))
                 .thenReturn(thirdPageEntity);
 
-        List<GitHubRepoItem> result = gitHubPaginationService.fetchAllRepositoriesFromGitHub(
-                gitHubApiClient, "test query");
+        List<GitHubRepoItem> result = gitHubPaginationService.fetchAllRepositoriesFromGitHub("test query");
 
         assertEquals(3, result.size());
         assertTrue(result.contains(testRepo1));
         assertTrue(result.contains(testRepo2));
         assertTrue(result.contains(testRepo3));
 
-        verify(gitHubApiClient).searchRepositories("test query", 100, 1);
-        verify(gitHubApiClient).searchRepositories("test query", 100, 2);
-        verify(gitHubApiClient).searchRepositories("test query", 100, 3);
+        verify(gitHubApiClient).searchRepositories(ACCEPT_HEADER, "test query", 100, 1);
+        verify(gitHubApiClient).searchRepositories(ACCEPT_HEADER, "test query", 100, 2);
+        verify(gitHubApiClient).searchRepositories(ACCEPT_HEADER, "test query", 100, 3);
     }
 
     @Test
@@ -115,19 +116,18 @@ class GitHubPaginationServiceTest {
                 .header("Link", "")
                 .body(emptyResponse);
 
-        when(gitHubApiClient.searchRepositories("test query", 100, 1))
+        when(gitHubApiClient.searchRepositories(ACCEPT_HEADER, "test query", 100, 1))
                 .thenReturn(responseEntity);
 
-        List<GitHubRepoItem> result = gitHubPaginationService.fetchAllRepositoriesFromGitHub(
-                gitHubApiClient, "test query");
+        List<GitHubRepoItem> result = gitHubPaginationService.fetchAllRepositoriesFromGitHub("test query");
 
         assertTrue(result.isEmpty());
 
-        verify(gitHubApiClient).searchRepositories("test query", 100, 1);
+        verify(gitHubApiClient).searchRepositories(ACCEPT_HEADER,"test query", 100, 1);
     }
 
     @Test
-    void whenFetchingAllRepositoriesFromGitHubWithExceptionOnSecondPage_ShouldReturnFirstPageResults() {
+    void whenFetchingAllRepositoriesFromGitHubWithExceptionOnSecondPage_ShouldThrowGitHubApiException() {
         GitHubApiClientResponse firstPageResponse = new GitHubApiClientResponse(
                 2, false, List.of(testRepo1, testRepo2)
         );
@@ -136,19 +136,14 @@ class GitHubPaginationServiceTest {
                 .header("Link", "<https://api.github.com/search/repositories?page=2>; rel=\"next\"")
                 .body(firstPageResponse);
 
-        when(gitHubApiClient.searchRepositories("test query", 100, 1))
+        when(gitHubApiClient.searchRepositories(ACCEPT_HEADER,"test query", 100, 1))
                 .thenReturn(firstPageEntity);
-        when(gitHubApiClient.searchRepositories("test query", 100, 2))
+        when(gitHubApiClient.searchRepositories(ACCEPT_HEADER,"test query", 100, 2))
                 .thenThrow(new RuntimeException("API Error"));
 
-        List<GitHubRepoItem> result = gitHubPaginationService.fetchAllRepositoriesFromGitHub(
-                gitHubApiClient, "test query");
+        assertThrows(GitHubApiException.class, () -> gitHubPaginationService.fetchAllRepositoriesFromGitHub("test query"));
 
-        assertEquals(2, result.size());
-        assertTrue(result.contains(testRepo1));
-        assertTrue(result.contains(testRepo2));
-
-        verify(gitHubApiClient).searchRepositories("test query", 100, 1);
-        verify(gitHubApiClient).searchRepositories("test query", 100, 2);
+        verify(gitHubApiClient).searchRepositories(ACCEPT_HEADER,"test query", 100, 1);
+        verify(gitHubApiClient).searchRepositories(ACCEPT_HEADER,"test query", 100, 2);
     }
 }
