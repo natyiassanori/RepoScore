@@ -1,6 +1,7 @@
 package org.reposcore.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.reposcore.exception.GitHubApiException;
 import org.reposcore.feign.client.GitHubApiClient;
 import org.reposcore.feign.client.dto.GitHubApiClientResponse;
 import org.reposcore.feign.client.dto.GitHubRepoItem;
@@ -51,7 +52,7 @@ public class GitHubPaginationService {
                 }
             } catch (Exception ex) {
                 log.error("Error fetching repositories from page {}: {}", currentPage, ex.getMessage());
-                hasMorePages = false;
+                throw new GitHubApiException(ex.getMessage());
             }
         }
         
