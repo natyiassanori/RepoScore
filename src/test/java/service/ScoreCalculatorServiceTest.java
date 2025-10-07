@@ -53,8 +53,7 @@ class ScoreCalculatorServiceTest {
         assertEquals("test-repo", scoredRepo.getName());
         assertEquals(1000, scoredRepo.getStars());
         assertEquals(500, scoredRepo.getForks());
-        assertTrue(scoredRepo.getScore() > 0);
-        assertTrue(scoredRepo.getScore() <= 1.0);
+        assertEquals(1.0, scoredRepo.getScore());
     }
 
     @Test
@@ -78,8 +77,9 @@ class ScoreCalculatorServiceTest {
                 .filter(r -> r.getStars() == 0)
                 .findFirst().orElseThrow();
 
-        assertTrue(highMetricsScored.getScore() > lowMetricsScored.getScore());
-        assertTrue(lowMetricsScored.getScore() > zeroMetricsScored.getScore());
+        assertEquals(1.0, highMetricsScored.getScore());
+        assertEquals(0.45, lowMetricsScored.getScore());
+        assertEquals(0.2, zeroMetricsScored.getScore());
     }
 
     @Test
@@ -108,7 +108,8 @@ class ScoreCalculatorServiceTest {
                 .filter(r -> r.getUpdatedAt().equals(oldRepo.updatedAt()))
                 .findFirst().orElseThrow();
 
-        assertTrue(recentScored.getScore() > oldScored.getScore());
+        assertEquals(0.98, recentScored.getScore());
+        assertEquals(0.8, oldScored.getScore());
     }
 
     @Test
@@ -124,6 +125,7 @@ class ScoreCalculatorServiceTest {
 
 
         assertEquals(result.getFirst().getScore(), result.getLast().getScore());
+        assertEquals(0.2, result.getFirst().getScore());
     }
 
     @Test
@@ -144,5 +146,6 @@ class ScoreCalculatorServiceTest {
         assertEquals(repoWithHighMetrics.htmlUrl(), scoredRepo.getHtmlUrl());
         assertEquals(repoWithHighMetrics.createdAt(), scoredRepo.getCreatedAt());
         assertEquals(repoWithHighMetrics.updatedAt(), scoredRepo.getUpdatedAt());
+        assertEquals(1.0, scoredRepo.getScore());
     }
 }
