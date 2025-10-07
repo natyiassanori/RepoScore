@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.reposcore.dto.ScoredRepository;
-import org.reposcore.feign.client.GitHubApiClient;
 import org.reposcore.feign.client.dto.GitHubRepoItem;
 import org.reposcore.service.GitHubPaginationService;
 import org.reposcore.service.ScoreCalculatorService;
@@ -19,15 +18,11 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ScoringRepositoriesServiceTest {
-
-    @Mock
-    private GitHubApiClient gitHubApiClient;
 
     @Mock
     private ScoreCalculatorService scoreCalculatorService;

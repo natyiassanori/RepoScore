@@ -56,7 +56,7 @@ class ScoreCalculatorServiceTest {
     }
 
     @Test
-    void whenAssigningScoresForRepositoriesWithMultipleRepositories_ShouldCalculateScoresCorrectly() {
+    void whenAssigningScoresForMultipleRepositories_ShouldCalculateScoresCorrectly() {
         List<GitHubRepoItem> repositories = List.of(repoWithHighMetrics, repoWithLowMetrics, repoWithZeroMetrics);
 
         List<ScoredRepository> result = scoreCalculatorService.assignScoresForRepositories(repositories);
@@ -82,7 +82,7 @@ class ScoreCalculatorServiceTest {
     }
 
     @Test
-    void whenAssigningScoresForRepositoriesWithEmptyList_ShouldReturnEmptyList() {
+    void whenAssigningScoresForEmptyList_ShouldReturnEmptyList() {
         List<GitHubRepoItem> repositories = List.of();
 
         List<ScoredRepository> result = scoreCalculatorService.assignScoresForRepositories(repositories);
@@ -91,7 +91,7 @@ class ScoreCalculatorServiceTest {
     }
 
     @Test
-    void whenAssigningScoresForRepositoriesWithRecentUpdatedRepository_ShouldHaveHigherRecencyScore() {
+    void whenAssigningScoresForRecentUpdatedRepository_ShouldHaveHigherRecencyScore() {
         List<GitHubRepoItem> repositories = List.of(recentRepo, oldRepo);
 
         List<ScoredRepository> result = scoreCalculatorService.assignScoresForRepositories(repositories);

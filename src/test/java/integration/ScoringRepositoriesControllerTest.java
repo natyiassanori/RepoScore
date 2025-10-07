@@ -2,9 +2,7 @@ package integration;
 
 import factory.GitHubApiClientResponseFactory;
 import factory.GitHubRepoItemFactory;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 import org.reposcore.feign.client.GitHubApiClient;
 import org.reposcore.feign.client.dto.GitHubApiClientResponse;
 import org.reposcore.feign.client.dto.GitHubRepoItem;
@@ -18,8 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -36,11 +32,6 @@ class ScoringRepositoriesControllerTest {
 
     @MockitoBean
     private GitHubApiClient gitHubApiClient;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void whenGettingScoredRepositoriesWithoutQueryParameters_ThenShouldReturnAllRepositories() throws Exception {

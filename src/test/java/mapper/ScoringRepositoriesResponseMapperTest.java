@@ -35,5 +35,6 @@ class ScoringRepositoriesResponseMapperTest {
         assertEquals(testGitHubRepo.htmlUrl(), result.getHtmlUrl());
         assertEquals(testGitHubRepo.createdAt(), result.getCreatedAt());
         assertEquals(testGitHubRepo.updatedAt(), result.getUpdatedAt());
+        assertEquals(testScore, result.getScore());
     }
 }
