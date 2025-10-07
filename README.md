@@ -53,7 +53,7 @@ To account for how recently a repository was updated, we apply an **exponential 
 
 
 Here, `ALPHA = 0.1`, which controls how fast the decay happens. A smaller alpha means slower decay. 
-This ensures that **recently updated** repositories score higher.
+This ensures that recently updated repositories score higher.
 
 ---
 
@@ -72,7 +72,7 @@ This is a **Spring Boot** project using **Java 21**. You can run it using your p
 
 **GET** `/scoring?language=${language}&earliestCreatedDate=${creationDate}`
 
-e.g.: http://localhost:8080/scoring?language=java&createdDate=2023-01-01
+e.g.: http://localhost:8080/scoring?language=java&earliestCreatedDate=2023-01-01
 
 This endpoint returns a list of repositories with their calculated scores.
 
@@ -99,7 +99,7 @@ If no parameters are provided, it fetches all available repositories (up to GitH
 
 - **Better Error Handling**: Currently, API error codes from GitHub are handled with a general custom exception, and query parameter validation is not implemented, 
 instead I'm only catching the InvalidArgumentException so the user can have at least one feedback. Error handling can be more robust.
-- **Persistent Caching**: Replace in-memory cache with a more robust solution (e.g., Redis). A background job could refresh repository scores hourly.
+- **More robust Caching**: Replace in-memory cache with a more robust solution (e.g., Redis). A background job could refresh repository scores hourly.
 - **Ranking repositories** - it was not in the requirements but we could return the repositories ordered by score (highest to lowest)
 - **Score normalization** - as I mentioned in the section 'Score of Stars and Forks', I implemented it in the beginning but decided to remove it after thinking more about the design and deciding to go for a interface approach. But is would be a nice feature to have :)
 ---
