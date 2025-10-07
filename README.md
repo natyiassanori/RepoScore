@@ -13,7 +13,7 @@ The project is built using **Spring Boot** and runs on **Java 21**.
 
 ## Score Calculation
 
-The score is a decimal value ranging from **0 to 1**, indicating the relative popularity of a repository. A higher score means a more popular repository.
+The score is a decimal value that indicates the popularity of a repository. A higher score means a more popular repository.
 
 ### Score Components
 
@@ -26,19 +26,22 @@ The final score is calculated based on the following factors:
 | Recency of Updates | 0.2    |
 
 > **Formula**:  
-> `score = (normalizedStars * 0.4) + (normalizedForks * 0.4) + (recencyDecay * 0.2)`
+> `score = (starsScore * 0.4) + (forksScore * 0.4) + (recencyScore * 0.2)`
 
 ---
 
-### Normalization of Stars and Forks
+### Score of Stars and Forks
 
-To ensure fairness across repositories with vastly different star and fork counts, we **normalize** these values using the following formula:
+In the end I decided to use simple logarithmic scaling, to score the star counts in a simple way and that rewards popularity but avoids letting high star numbers dominate the score (each additional star adds a bit less than the one before).
+We need to sum +1 to the number of stars to avoid log(0) - infinity.
 
-> `normalizedValue = log(1 + value) / log(1 + maxValue)`
+> `starScore = log(1 + numberOfStars) `
 
+Fork score is calculated in the same way using numberOfForks.
 
-This prevents repositories with extremely high star or fork counts from disproportionately skewing the results. 
-Without normalization, popular repos would get scores close to 1, while most others would get near-zero scores, making the comparison meaningless.
+Ideally, we should normalize the scores to prevent repositories with extremely high star or fork counts from disproportionately skewing the results. 
+I have tried to implement the normalization but afterwards I decided to go for a interface approach and removed it (because for normalization we need the maximum value among all the repos and it was increasing the complexity with the approach I chose). 
+But I would suggest it in the improvements section :) 
 
 ---
 
@@ -98,6 +101,7 @@ If no parameters are provided, it fetches all available repositories (up to GitH
 instead I'm only catching the InvalidArgumentException so the user can have at least one feedback. Error handling can be more robust.
 - **Persistent Caching**: Replace in-memory cache with a more robust solution (e.g., Redis). A background job could refresh repository scores hourly.
 - **Ranking repositories** - it was not in the requirements but we could return the repositories ordered by score (highest to lowest)
+- **Score normalization** - as I mentioned in the section 'Score of Stars and Forks', I implemented it in the beginning but decided to remove it after thinking more about the design and deciding to go for a interface approach. But is would be a nice feature to have :)
 ---
 
 ## About the Use of AI
