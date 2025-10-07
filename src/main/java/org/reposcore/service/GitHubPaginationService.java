@@ -15,6 +15,8 @@ import java.util.List;
 @Service
 public class GitHubPaginationService {
 
+    private static final String ACCEPT_HEADER = "application/vnd.github+json";
+
     @Cacheable("gitHubRepositories")
     public List<GitHubRepoItem> fetchAllRepositoriesFromGitHub(GitHubApiClient gitHubApiClient, String query) {
         List<GitHubRepoItem> allRepositories = new ArrayList<>();
@@ -26,6 +28,7 @@ public class GitHubPaginationService {
         while (hasMorePages) {
             try {
                 ResponseEntity<GitHubApiClientResponse> responseEntity = gitHubApiClient.searchRepositories(
+                    ACCEPT_HEADER,
                     query, 
                     perPage, 
                     currentPage

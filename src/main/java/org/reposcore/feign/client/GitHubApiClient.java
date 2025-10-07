@@ -4,6 +4,7 @@ import org.reposcore.feign.client.dto.GitHubApiClientResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface GitHubApiClient {
 
     @GetMapping(path = "/search/repositories")
-    ResponseEntity<GitHubApiClientResponse> searchRepositories(@RequestParam(value = "q") String query,
+    ResponseEntity<GitHubApiClientResponse> searchRepositories(@RequestHeader("Accept") String accept,
+                                                              @RequestParam(value = "q") String query,
                                                               @RequestParam(value = "per_page") int perPage,
                                                               @RequestParam(value = "page") int page);
 }
