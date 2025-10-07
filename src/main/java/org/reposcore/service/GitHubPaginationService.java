@@ -20,6 +20,8 @@ public class GitHubPaginationService {
 
     private static final String ACCEPT_HEADER = "application/vnd.github+json";
 
+    private static final int PER_PAGE = 100;
+
     private final GitHubApiClient gitHubApiClient;
 
     @Cacheable("gitHubRepositories")
@@ -27,7 +29,6 @@ public class GitHubPaginationService {
         List<GitHubRepoItem> allRepositories = new ArrayList<>();
         
         int currentPage = 1;
-        int perPage = 100;
         boolean hasMorePages = true;
         
         while (hasMorePages) {
@@ -35,7 +36,7 @@ public class GitHubPaginationService {
                 ResponseEntity<GitHubApiClientResponse> responseEntity = gitHubApiClient.searchRepositories(
                     ACCEPT_HEADER,
                     query, 
-                    perPage, 
+                    PER_PAGE,
                     currentPage
                 );
                 

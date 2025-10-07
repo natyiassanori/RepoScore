@@ -3,7 +3,6 @@ package org.reposcore.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.reposcore.dto.ScoredRepository;
-import org.reposcore.feign.client.GitHubApiClient;
 import org.reposcore.feign.client.dto.GitHubRepoItem;
 import org.springframework.stereotype.Service;
 
