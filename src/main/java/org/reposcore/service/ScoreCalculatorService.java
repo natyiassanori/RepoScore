@@ -7,6 +7,8 @@ import org.reposcore.feign.client.dto.GitHubRepoItem;
 import org.reposcore.mapper.ScoringRepositoriesResponseMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -82,9 +84,13 @@ public class ScoreCalculatorService {
 
 
     private double calculateTotalScore(double starsScore, double forksScore, double recencyScore) {
-        return WEIGHT_STARS * starsScore +
+        double score = WEIGHT_STARS * starsScore +
                 WEIGHT_FORKS * forksScore +
                 WEIGHT_RECENCY * recencyScore;
+
+        BigDecimal roundedScore = new BigDecimal(score).setScale(2, RoundingMode.HALF_UP);
+
+        return roundedScore.doubleValue();
     }
 
 }
