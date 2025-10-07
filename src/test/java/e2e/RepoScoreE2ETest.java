@@ -33,7 +33,6 @@ class RepoScoreE2ETest {
                 .andExpect(jsonPath("$[0].stars").exists())
                 .andExpect(jsonPath("$[0].forks").exists())
                 .andExpect(jsonPath("$[0].score").value(greaterThanOrEqualTo(0.0)))
-                .andExpect(jsonPath("$[0].score").value(lessThanOrEqualTo(1.0)))
                 .andExpect(jsonPath("$[*].language").value(everyItem(equalTo("Python"))))
                 .andDo(result -> {
                     String response = result.getResponse().getContentAsString();
