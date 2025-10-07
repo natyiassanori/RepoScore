@@ -93,9 +93,10 @@ If no parameters are provided, it fetches all available repositories (up to GitH
 
 ## Possible Improvements
 
-- **Better Error Handling**: Currently, API error codes from GitHub are not handled, and query parameter validation is not implemented.
+- **Better Error Handling**: Currently, API error codes from GitHub are handled with a general custom exception, and query parameter validation is not implemented, 
+instead I'm only catching the InvalidArgumentException so the user can have at least one feedback. Error handling can be more robust.
 - **Persistent Caching**: Replace in-memory cache with a more robust solution (e.g., Redis). A background job could refresh repository scores hourly.
-
+- **Ranking repositories** - it was not in the requirements but we could return the repositories ordered by score (highest to lowest)
 ---
 
 ## About the Use of AI
