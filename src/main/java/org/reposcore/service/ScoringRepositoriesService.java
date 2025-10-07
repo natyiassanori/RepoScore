@@ -1,6 +1,7 @@
 package org.reposcore.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.reposcore.dto.ScoredRepository;
 import org.reposcore.feign.client.GitHubApiClient;
 import org.reposcore.feign.client.dto.GitHubRepoItem;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ScoringRepositoriesService {
 
     private final GitHubApiClient gitHubApiClient;
@@ -22,9 +24,15 @@ public class ScoringRepositoriesService {
     public List<ScoredRepository> getRepositoriesWithScore(Date createdDate, String language) {
         String query = buildQueryParameter(createdDate, language);
 
+        log.info("Calculating score for repositories that matches the query: {}", query);
+
         List<GitHubRepoItem> allRepositories = gitHubPaginationService.fetchAllRepositoriesFromGitHub(gitHubApiClient, query);
 
-        return scoreCalculatorService.assignScoresForRepositories(allRepositories);
+        List<ScoredRepository> scoredRepositories = scoreCalculatorService.assignScoresForRepositories(allRepositories);
+
+        log.info("Score assigned to {} repositories", scoredRepositories.size());
+
+        return scoredRepositories;
     }
 
     private String buildQueryParameter(Date createdDate, String language) {

@@ -1,6 +1,7 @@
 package org.reposcore.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.reposcore.dto.ScoredRepository;
 import org.reposcore.feign.client.dto.GitHubRepoItem;
 import org.reposcore.mapper.ScoringRepositoriesResponseMapper;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ScoreCalculatorService {
 
     //used to calculate exponential decay of recency
@@ -34,6 +36,8 @@ public class ScoreCalculatorService {
 
             double score = getRepositoryScore(gitHubRepo, maxStars, maxForks);
 
+            log.debug("Score for repository with id {} = {}", gitHubRepo.id(), score);
+
             scoredRepositories.add(ScoringRepositoriesResponseMapper.mapToScoredRepository(gitHubRepo, score));
         }
 
@@ -43,9 +47,16 @@ public class ScoreCalculatorService {
 
 
     private double getRepositoryScore(GitHubRepoItem gitHubRepo, int maxStars, int maxForks) {
-        double starsScore = calculateStarsNormalized(gitHubRepo.stargazersCount(), maxStars);
-        double forksScore = calculateForksNormalized(gitHubRepo.forksCount(), maxForks);
-        double recencyScore = calculateRecencyNormalized(getHoursSinceLastUpdate(gitHubRepo.updatedAt()));
+        int stars = gitHubRepo.stargazersCount();
+        int forks = gitHubRepo.forksCount();
+        Date updatedAt = gitHubRepo.updatedAt();
+
+        log.debug("Calculating score for repository with id {}, {} stars, {} forks and last updated at {}",
+                gitHubRepo.id(), stars, forks, updatedAt);
+
+        double starsScore = calculateStarsNormalized(stars, maxStars);
+        double forksScore = calculateForksNormalized(forks, maxForks);
+        double recencyScore = calculateRecencyNormalized(getHoursSinceLastUpdate(updatedAt));
 
         return calculateTotalScore(starsScore, forksScore, recencyScore);
     }
